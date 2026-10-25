@@ -1,0 +1,165 @@
+/* A shared, unhurried rhythm for the portfolio's motion. */
+:root {
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+}
+
+.hero-copy h1 { display: flex; flex-direction: column; }
+.hero-copy h1 > .hero-line {
+  display: block;
+  overflow: clip;
+  padding-block: .2em;
+  margin-block: -.2em;
+  color: inherit;
+  font-weight: 500;
+}
+.hero-copy h1 > .hero-line-secondary {
+  color: #e5e5db;
+  font-weight: 400;
+}
+.hero-line > span { display: block; }
+
+/* The closed panel stays mounted so both opening and closing can ease. */
+.service-panel { display: grid; grid-template-rows: 0fr; }
+.service-panel-inner { min-height: 0; overflow: hidden; visibility: hidden; }
+.service-panel p { padding-bottom: 28px; margin-bottom: 0; }
+.service.is-open .service-panel { grid-template-rows: 1fr; }
+.service.is-open .service-panel-inner { visibility: visible; }
+.service.is-open h3 { color: var(--acid); }
+
+nav a { position: relative; padding-block: 5px; }
+nav a::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--acid);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+html[dir=rtl] nav a::after { transform-origin: right; }
+nav a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+.pill { position: relative; isolation: isolate; overflow: hidden; }
+.pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 20%, #ffffff30 50%, transparent 80%);
+  transform: translateX(-150%);
+}
+.ticker:hover > div { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes arrive {
+    from { opacity: 0; translate: 0 20px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+  @keyframes title-arrive {
+    from { translate: 0 115%; rotate: 2deg; }
+    to { translate: 0 0; rotate: 0deg; }
+  }
+  @keyframes mark-arrive {
+    from { opacity: 0; rotate: -90deg; scale: .65; }
+    to { opacity: 1; rotate: 0deg; scale: 1; }
+  }
+  @keyframes dialog-arrive {
+    from { opacity: 0; translate: 0 24px; scale: .98; }
+    to { opacity: 1; translate: 0 0; scale: 1; }
+  }
+  @keyframes backdrop-arrive {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  header .brand, header nav, .header-actions, .hero-top {
+    animation: arrive .85s var(--ease-out) both;
+  }
+  header nav { animation-delay: 70ms; }
+  .header-actions { animation-delay: 120ms; }
+  .hero-top { animation-delay: 100ms; }
+  .hero-line > span { animation: title-arrive 1.15s var(--ease-out) 160ms both; }
+  .hero-line-secondary > span { animation-delay: 290ms; }
+  .hero-asterisk { animation: mark-arrive 1.2s var(--ease-out) 420ms both; }
+  .hero-description { animation: arrive 1s var(--ease-out) 420ms both; }
+  .hero-copy > .pill { animation: arrive .9s var(--ease-out) 540ms both; }
+  .hero-bottom, .prism-caption, .motion-button { animation: arrive 1s var(--ease-out) 650ms both; }
+
+  [data-reveal] {
+    transition: opacity .75s var(--ease-out) var(--reveal-delay, 0ms),
+      translate .95s var(--ease-out) var(--reveal-delay, 0ms), color .25s;
+  }
+  [data-reveal-pending] { opacity: 0; translate: 0 28px; }
+  [data-reveal="art"][data-reveal-pending] { translate: 0 42px; }
+  [data-reveal-delay="1"] { --reveal-delay: 110ms; }
+  [data-reveal]:focus-within { opacity: 1; translate: 0 0; transition-delay: 0ms; }
+
+  .service-panel {
+    transition: grid-template-rows .5s var(--ease-out);
+  }
+  .service-panel-inner { transition: visibility 0s .5s; }
+  .service.is-open .service-panel-inner { transition-delay: 0s; }
+  .service-panel p {
+    opacity: 0;
+    translate: 0 -8px;
+    transition: opacity .2s ease, translate .4s var(--ease-out);
+  }
+  .service.is-open .service-panel p {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: 70ms;
+  }
+  .service h3 { transition: color .25s, translate .45s var(--ease-out); }
+  nav a::after { transition: transform .4s var(--ease-out); }
+  .pill { transition: background .25s, transform .45s var(--ease-out), box-shadow .45s; }
+  .pill::after { transition: transform .8s var(--ease-out); }
+  .pill > svg, .text-link > svg, .contact-link > svg, .lang svg,
+  .circle-arrow > svg, footer > a:last-child > svg {
+    transition: transform .45s var(--ease-out);
+  }
+  .circle-arrow { transition: background .3s, border-color .3s, color .3s; }
+  .project .artwork { transition: filter .5s, transform .7s var(--ease-out); }
+  .logo-art, .photo img { transition: transform 1s var(--ease-out); }
+  .spectrum-orb, .grid-sphere, .type strong, .wire-orb {
+    transition: transform 1.2s var(--ease-out);
+  }
+  .project h3 { transition: color .3s; }
+  .filters button { transition: color .25s, background .3s, border-color .3s; }
+  .brand-icon i, .footer-name > span { transition: rotate .7s var(--ease-out); }
+  .brand:hover .brand-icon i, .footer-name:hover > span { rotate: 90deg; }
+  .motion-button, .close-dialog { transition: background .25s, transform .35s var(--ease-out); }
+  .motion-button:hover, .close-dialog:hover { background: #454a36; transform: scale(1.08); }
+
+  dialog[open] { animation: dialog-arrive .55s var(--ease-out) both; }
+  dialog[open]::backdrop { animation: backdrop-arrive .4s ease both; }
+  dialog[open] .dialog-copy { animation: arrive .65s var(--ease-out) 80ms both; }
+  dialog[open] > .artwork { animation: arrive .7s var(--ease-out) 140ms both; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .project:hover .artwork { transform: translateY(-5px); }
+    .project:hover .logo-art, .project:hover .photo img { transform: scale(1.04); }
+    .project:hover .spectrum-orb { transform: rotate(-17deg) scale(1.04); }
+    .project:hover .grid-sphere { transform: rotate(-16deg) scale(1.03); }
+    .project:hover .type strong { transform: rotate(-5deg); }
+    .project:hover h3 { color: var(--acid); }
+    .project:hover .circle-arrow > svg { transform: translate(2px, -2px); }
+    .about-art:hover .wire-orb { transform: rotate(-20deg) scale(1.04); }
+    .pill:hover::after { transform: translateX(150%); }
+    .pill:hover { box-shadow: 0 8px 28px #e1f46914; }
+    .pill:hover > svg, .text-link:hover > svg, .contact-link:hover > svg,
+    .lang:hover svg, footer > a:last-child:hover > svg { transform: translate(3px, -3px); }
+    .hero-copy > .pill:hover > svg { transform: translateY(3px); }
+    .service button:hover h3 { translate: 5px 0; }
+    html[dir=rtl] .service button:hover h3 { translate: -5px 0; }
+  }
+
+  @media (max-width: 700px) {
+    [data-reveal-delay] { --reveal-delay: 0ms; }
+    nav.open { animation: arrive .35s var(--ease-out) both; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal-pending] { opacity: 1; translate: none; }
+}
